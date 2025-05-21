@@ -19,7 +19,7 @@ import {
 } from 'mdast'
 import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm'
 import { gfm } from 'micromark-extension-gfm'
-import { last } from 'lodash-es'
+import { last } from 'lodash'
 
 export type Handle = (ctx: {
   node: Node
