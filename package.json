@@ -1,6 +1,6 @@
 {
   "name": "markdown-to-quill-delta-cjs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Convert Markdown to Quill Delta",
   "author": "Sebastian Frysztak <sebastian.frysztak.dev>",
   "license": "ISC",
@@ -21,8 +21,7 @@
     "test": "vitest run",
     "build": "tsc",
     "build:w": "tsc -w",
-    "format": "prettier --write src/ test/",
-    "postinstall": "npx simple-git-hooks"
+    "format": "prettier --write src/ test/"
   },
   "keywords": [
     "remark",
