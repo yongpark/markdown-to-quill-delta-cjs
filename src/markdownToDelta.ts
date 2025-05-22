@@ -1,4 +1,3 @@
-import type Op from 'quill-delta/dist/Op'
 import { fromMarkdown } from 'mdast-util-from-markdown'
 import { toMarkdown } from 'mdast-util-to-markdown'
 import {
@@ -24,7 +23,7 @@ import { last } from 'lodash'
 export type Handle = (ctx: {
   node: Node
   ancestors: Node[]
-  ops: Op[]
+  ops: any[]
   process: (node: Node, ancestors: Node[]) => void
 }) => undefined | true
 
@@ -55,7 +54,7 @@ const paragraph: Handle = ({ node, process: handle, ancestors, ops }) => {
   ;(node as Paragraph).children.forEach((it) =>
     handle(it, [...ancestors, node]),
   )
-  ops.push({ insert: '\n' } as Op)
+  ops.push({ insert: '\n' } as any)
   // if (['paragraph', 'code', 'heading'].includes(getNextType(ancestors, node))) {
   //   ops.push({ insert: '\n' } as Op)
   // }
@@ -149,7 +148,7 @@ const listItem: Handle = ({ node, ancestors, ops, process: handle }) => {
   }
   const list = ancestors.filter((it) => it.type === 'list') as List[]
   const lastList = last(list)
-  const op: Op = {
+  const op: any = {
     insert: '\n',
     attributes: {
       list:
@@ -285,7 +284,7 @@ function markdownToDelta(
   options: {
     handle?: Handle
   } = {},
-): Op[] {
+): any[] {
   let ast: Root
   if (typeof source === 'string') {
     ast = fromMarkdown(source, {
@@ -296,7 +295,7 @@ function markdownToDelta(
     ast = source
   }
 
-  const ops: Op[] = []
+  const ops: any[] = []
 
   function process(node: Node, ancestors: Node[]) {
     const handles: Handle[] = [
