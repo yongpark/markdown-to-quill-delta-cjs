@@ -47,10 +47,7 @@ const mergeConsecutiveOrderedLists = (root: Root): Root => {
           mergedChildren.push(currentOrderedList)
         }
       } else {
-        // This is a bullet list - flush any pending ordered list
-        if (currentOrderedList) {
-          currentOrderedList = null
-        }
+        // This is a bullet list - keep the ordered list active but add the bullet list
         mergedChildren.push(child)
       }
     } else {
