@@ -191,6 +191,106 @@ describe('markdownToDelta', () => {
       },
     ])
   })
+  it('should merge consecutive ordered lists separated by bullet lists', () => {
+    const input = `1. **First Item**
+* Description for first item.
+
+2. **Second Item**
+* Description for second item.
+
+3. **Third Item**
+* Description for third item.
+
+4. **Fourth Item**
+* Description for fourth item.`
+    const delta = markdownToDelta(input)
+    expect(delta).toEqual([
+      {
+        insert: 'First Item',
+        attributes: {
+          bold: true,
+        },
+      },
+      {
+        insert: '\n',
+        attributes: {
+          list: 'ordered',
+        },
+      },
+      {
+        insert: 'Description for first item.',
+      },
+      {
+        insert: '\n',
+        attributes: {
+          list: 'bullet',
+        },
+      },
+      {
+        insert: 'Second Item',
+        attributes: {
+          bold: true,
+        },
+      },
+      {
+        insert: '\n',
+        attributes: {
+          list: 'ordered',
+        },
+      },
+      {
+        insert: 'Description for second item.',
+      },
+      {
+        insert: '\n',
+        attributes: {
+          list: 'bullet',
+        },
+      },
+      {
+        insert: 'Third Item',
+        attributes: {
+          bold: true,
+        },
+      },
+      {
+        insert: '\n',
+        attributes: {
+          list: 'ordered',
+        },
+      },
+      {
+        insert: 'Description for third item.',
+      },
+      {
+        insert: '\n',
+        attributes: {
+          list: 'bullet',
+        },
+      },
+      {
+        insert: 'Fourth Item',
+        attributes: {
+          bold: true,
+        },
+      },
+      {
+        insert: '\n',
+        attributes: {
+          list: 'ordered',
+        },
+      },
+      {
+        insert: 'Description for fourth item.',
+      },
+      {
+        insert: '\n',
+        attributes: {
+          list: 'bullet',
+        },
+      },
+    ])
+  })
   it('should convert markdown blockquote to delta', () => {
     const input = '> Hello, world!'
     const delta = markdownToDelta(input)

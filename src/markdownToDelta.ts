@@ -18,7 +18,7 @@ import {
 } from 'mdast'
 import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm'
 import { gfm } from 'micromark-extension-gfm'
-import { last } from 'lodash'
+import lodash from 'lodash'
 
 export type Handle = (ctx: {
   node: Node
@@ -27,14 +27,52 @@ export type Handle = (ctx: {
   process: (node: Node, ancestors: Node[]) => void
 }) => undefined | true
 
+// Function to merge consecutive ordered lists
+const mergeConsecutiveOrderedLists = (root: Root): Root => {
+  const mergedChildren: Root['children'] = []
+  let currentOrderedList: List | null = null
+
+  for (const child of root.children) {
+    if (child.type === 'list') {
+      const list = child as List
+
+      if (list.ordered) {
+        // This is an ordered list
+        if (currentOrderedList) {
+          // Merge with existing ordered list
+          currentOrderedList.children.push(...list.children)
+        } else {
+          // Start a new ordered list
+          currentOrderedList = { ...list }
+          mergedChildren.push(currentOrderedList)
+        }
+      } else {
+        // This is a bullet list - flush any pending ordered list
+        if (currentOrderedList) {
+          currentOrderedList = null
+        }
+        mergedChildren.push(child)
+      }
+    } else {
+      // Non-list node - flush any pending ordered list
+      if (currentOrderedList) {
+        currentOrderedList = null
+      }
+      mergedChildren.push(child)
+    }
+  }
+
+  return { ...root, children: mergedChildren }
+}
+
 const getPreviousType = (ancestors: Node[], node: Node): string => {
-  const child = last(ancestors as Parent[])?.children
+  const child = lodash.last(ancestors as Parent[])?.children
   const previousType = child?.[child.indexOf(node as any) - 1]?.type
   return previousType ?? 'firstOne'
 }
 
 const getNextType = (ancestors: Node[], node: Node): string => {
-  const child = last(ancestors as Parent[])?.children
+  const child = lodash.last(ancestors as Parent[])?.children
   const nextType = child?.[child.indexOf(node as any) + 1]?.type
   return nextType ?? 'lastOne'
 }
@@ -143,11 +181,11 @@ const listItem: Handle = ({ node, ancestors, ops, process: handle }) => {
   item.children
     .filter((it) => it.type !== 'list')
     .forEach((it) => handle(it, [...ancestors, node]))
-  if (last(ops)?.insert === '\n' && !last(ops)?.attributes) {
+  if (lodash.last(ops)?.insert === '\n' && !lodash.last(ops)?.attributes) {
     ops.pop()
   }
   const list = ancestors.filter((it) => it.type === 'list') as List[]
-  const lastList = last(list)
+  const lastList = lodash.last(list)
   const op: any = {
     insert: '\n',
     attributes: {
@@ -178,7 +216,7 @@ const blockquote: Handle = ({ node, ancestors, ops, process: handle }) => {
   ;(node as Blockquote).children.forEach((it) =>
     handle(it, [...ancestors, node]),
   )
-  if (last(ops)?.insert === '\n' && !last(ops)?.attributes) {
+  if (lodash.last(ops)?.insert === '\n' && !lodash.last(ops)?.attributes) {
     ops.pop()
   }
   ops.push({
@@ -270,7 +308,7 @@ const breaking: Handle = ({ node, ancestors, ops, process }) => {
     return true
   }
   const old = ops[ops.length - 1]
-  const child = last(ancestors as Parent[])!.children
+  const child = lodash.last(ancestors as Parent[])!.children
   const nextNode = child[child.indexOf(node as any) + 1] as Text
   ops[ops.length - 1] = {
     insert: old.insert + '\n' + nextNode.value,
@@ -294,6 +332,9 @@ function markdownToDelta(
   } else {
     ast = source
   }
+
+  // Merge consecutive ordered lists
+  ast = mergeConsecutiveOrderedLists(ast)
 
   const ops: any[] = []
 

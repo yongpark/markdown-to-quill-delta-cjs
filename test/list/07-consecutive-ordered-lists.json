@@ -1,0 +1,86 @@
+[
+  {
+    "insert": "First Item",
+    "attributes": {
+      "bold": true
+    }
+  },
+  {
+    "insert": "\n",
+    "attributes": {
+      "list": "ordered"
+    }
+  },
+  {
+    "insert": "Description for first item."
+  },
+  {
+    "insert": "\n",
+    "attributes": {
+      "list": "bullet"
+    }
+  },
+  {
+    "insert": "Second Item",
+    "attributes": {
+      "bold": true
+    }
+  },
+  {
+    "insert": "\n",
+    "attributes": {
+      "list": "ordered"
+    }
+  },
+  {
+    "insert": "Description for second item."
+  },
+  {
+    "insert": "\n",
+    "attributes": {
+      "list": "bullet"
+    }
+  },
+  {
+    "insert": "Third Item",
+    "attributes": {
+      "bold": true
+    }
+  },
+  {
+    "insert": "\n",
+    "attributes": {
+      "list": "ordered"
+    }
+  },
+  {
+    "insert": "Description for third item."
+  },
+  {
+    "insert": "\n",
+    "attributes": {
+      "list": "bullet"
+    }
+  },
+  {
+    "insert": "Fourth Item",
+    "attributes": {
+      "bold": true
+    }
+  },
+  {
+    "insert": "\n",
+    "attributes": {
+      "list": "ordered"
+    }
+  },
+  {
+    "insert": "Description for fourth item."
+  },
+  {
+    "insert": "\n",
+    "attributes": {
+      "list": "bullet"
+    }
+  }
+] 
