@@ -49,6 +49,7 @@
     "mdast-util-gfm": "^3.0.0",
     "mdast-util-to-markdown": "^2.1.2",
     "micromark-extension-gfm": "^3.0.0",
+    "quill-delta": "^5.1.0",
     "unist-util-select": "^5.1.0"
   },
   "lint-staged": {

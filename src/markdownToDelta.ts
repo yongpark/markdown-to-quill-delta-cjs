@@ -1,3 +1,4 @@
+import type Op from 'quill-delta/dist/Op'
 import { fromMarkdown } from 'mdast-util-from-markdown'
 import { toMarkdown } from 'mdast-util-to-markdown'
 import {
@@ -23,7 +24,7 @@ import lodash from 'lodash'
 export type Handle = (ctx: {
   node: Node
   ancestors: Node[]
-  ops: any[]
+  ops: Op[]
   process: (node: Node, ancestors: Node[]) => void
 }) => undefined | true
 
@@ -92,7 +93,7 @@ const paragraph: Handle = ({ node, process: handle, ancestors, ops }) => {
   ;(node as Paragraph).children.forEach((it) =>
     handle(it, [...ancestors, node]),
   )
-  ops.push({ insert: '\n' } as any)
+  ops.push({ insert: '\n' } as Op)
   // if (['paragraph', 'code', 'heading'].includes(getNextType(ancestors, node))) {
   //   ops.push({ insert: '\n' } as Op)
   // }
@@ -186,7 +187,7 @@ const listItem: Handle = ({ node, ancestors, ops, process: handle }) => {
   }
   const list = ancestors.filter((it) => it.type === 'list') as List[]
   const lastList = lodash.last(list)
-  const op: any = {
+  const op: Op = {
     insert: '\n',
     attributes: {
       list:
@@ -322,7 +323,7 @@ function markdownToDelta(
   options: {
     handle?: Handle
   } = {},
-): any[] {
+): Op[] {
   let ast: Root
   if (typeof source === 'string') {
     ast = fromMarkdown(source, {
@@ -336,7 +337,7 @@ function markdownToDelta(
   // Merge consecutive ordered lists
   ast = mergeConsecutiveOrderedLists(ast)
 
-  const ops: any[] = []
+  const ops: Op[] = []
 
   function process(node: Node, ancestors: Node[]) {
     const handles: Handle[] = [
